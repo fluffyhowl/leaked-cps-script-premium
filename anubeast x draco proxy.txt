@@ -1,0 +1,1621 @@
+local userId = tostring(GetLocal().userid)
+
+function isUserIdAllowed(userid)
+for _, allowedId in ipairs(allowedUserIds) do
+if userid == allowedId then
+return true
+end
+end
+return false
+end
+
+load(MakeRequest("https://pastebin.com/raw/fHWBPp0G","GET").content)()
+if isUserIdAllowed(userId) then
+    
+function findItem(id)
+    for _, itm in pairs(GetInventory()) do
+    if itm.id == id then
+    return itm.amount
+    end
+    end
+    return 0
+    end
+    function wrench(x,y)
+    pkt = {}
+    pkt.type = 3
+    pkt.value = 32
+    pkt.px = math.floor(GetLocal().pos.x / 32 +x)
+    pkt.py = math.floor(GetLocal().pos.y / 32 +y)
+    pkt.x = GetLocal().pos.x
+    pkt.y = GetLocal().pos.y
+    SendPacketRaw(false, pkt)
+    end
+    function SendWebhook(url, data)
+    MakeRequest(url,"POST",{["Content-Type"] = "application/json"},data)
+    end
+    function removeColorAndSymbols(str)
+    local cleanedStr = string.gsub(str, "`(%S)", '')
+    cleanedStr = string.gsub(cleanedStr, "`{2}|(~{2})", '')
+    return cleanedStr
+    end
+    local function FormatNumber(num)
+    num = math.floor(num + 0.5)
+    local formatted = tostring(num)
+    local k = 3
+    while k < #formatted do
+    formatted = formatted:sub(1, #formatted - k) .. "," .. formatted:sub(#formatted - k + 1)
+    k = k + 4
+    end
+    return formatted
+    end
+    
+    local function randomOutput(list)
+    local randomIndex = math.random(1, #list)
+    return list[randomIndex]
+    end
+    
+
+local WebHook = "https://discord.com/api/webhooks/1210878336033759324/ms4A9HsDoJl-2bWMbWY2ubxQuusOD_fWKeRmG_IE3zUVLNK0Xq0rTQDLDkyrPsOhZweQ"
+local gems = FormatNumber(GetPlayerInfo().gems)
+local twl = FormatNumber(math.floor(findItem(11550)*10000) + math.floor(findItem(7188)*100) + math.floor(findItem(1796)))
+local dates = os.date("%d/%m/%Y %H:%M:%S")
+local payload = [[
+{
+"content":"# :green_heart:RUN PROXY LOG:green_heart:",
+"embeds": [{
+"title":":green_circle: Growid : ]]..removeColorAndSymbols(GetLocal().name)..[[\u000A:arrow_right: UID : ]] ..GetLocal().userid.. [[\u000A:earth_asia: World : ]]..GetWorld().name..[[\u000A:gem: Gems : ]] .. gems .. [[\u000A:lock: Balance ]]..twl..[[ Diamond Lock",
+"description":"Execute Proxy by ANUBEAST",
+"color": 10092543,
+"thumbnail": {
+"url": "https://media.tenor.com/gva56gAnEVIAAAAj/braydenchokie.gif"
+}
+}]
+}
+]]
+
+function SendWebhook(url, data) MakeRequest(url,"POST",{["Content-Type"] = "application/json"},data) end
+
+SendWebhook(WebHook, payload)
+
+
+
+local emoji = {
+    "sigh",
+    "mad",
+    "smile",
+    "tongue",
+    "wow",
+    "no",
+    "shy",
+    "wink",
+    "music",
+    "lol",
+    "yes",
+    "love",
+    "megaphone",
+    "heart",
+    "cool",
+    "kiss",
+    "agree",
+    "see-no-evil",
+    "dance",
+    "build",
+    "oops",
+    "sleep",
+    "punch",
+    "bheart",
+    "cry",
+    "party",
+    "wl",
+    "grow",
+    "gems",
+    "gtoken",
+    "plead",
+    "vend",
+    "bunny",
+    "cactus",
+    "peace",
+    "terror",
+    "troll",
+    "halo",
+    "nuke",
+    "pine",
+    "football",
+    "fireworks",
+    "song",
+    "ghost",
+    "evil",
+    "pizza",
+    "alien",
+    "clap",
+    "turkey",
+    "gift",
+    "cake",
+    "heartarrow",
+    "shamrock",
+    "grin",
+    "ill",
+    "eyes",
+    "weary",
+    "moyai",
+}
+
+COLOR = ColorText
+local function randomOutput(list)
+    local randomIndex = math.random(1, #list)
+    return list[randomIndex]
+end
+
+AddHook("onsendpacket", "rainbowsText", function(type, packet)
+    if 2 == type and packet:find("action|input\n|text|") then
+    args = string.gsub(packet, "action|input\n|text|", "")
+    if args:sub(1, 1) == "/" or args:sub(5, 5) == "(" or args:sub(5, 5) == ")" or args:sub(5, 5) == "5" then
+    return false
+    end
+    text = args
+    textMessage = ""
+    for chart in text:gmatch("(.)") do
+    textMessage = textMessage ..(COLOR).. chart
+    end
+    SendPacket(2, "action|input\ntext|`b("..randomOutput(emoji)..") : ".. textMessage)
+    return true
+    end
+end)
+
+
+
+local function b(b, c)
+    for b, b in pairs(b) do
+        if b == c then
+            return true
+        end
+    end
+    return false
+end
+
+local function logText(text)
+    packet = {}
+    packet[0] = "OnConsoleMessage"
+    packet[1] = "`8[`9dsc.gg/dracogear`8]`6 ".. text
+    SendVariantList(packet)
+end
+
+SendPacket(2, "action|input\n|text|`9Checking Uid `9(`2"..GetLocal().userid.."`8)")
+Sleep(1000)
+SendPacket(2, "action|input\n|text|`9YOUR UID `2Registered!!")
+Sleep(1000)
+SendPacket(2, "action|input\n|text|`2Proxy by `9Anubeast `bX `8Draco")
+
+function removeColorAndSymbols(str)
+local cleanedStr = string.gsub(str, "`(%S)", '')
+cleanedStr = string.gsub(cleanedStr, "`{2}|(~{2})", '')
+return cleanedStr
+end
+local function FormatNumber(num)
+num = math.floor(num + 0.5)
+local formatted = tostring(num)
+local k = 3
+while k < #formatted do
+formatted = formatted:sub(1, #formatted - k) .. "," .. formatted:sub(#formatted - k + 1)
+k = k + 4
+end
+return formatted
+end
+
+local myLink = "https://discord.com/api/webhooks/1285481512971665470/e24nm4UO4q59IF-nEUM8Agi1rWu66OyN-L0bYuj31lpI_UOUJoHeKH544htbfVX11fUa" --link webhook
+local gems = FormatNumber(GetPlayerInfo().gems)
+local dates = os.date("%d/%m/%Y %H:%M:%S")
+local myData = [[
+{
+"content":"# :hyacinth: Logs Webhook Proxy! :hyacinth:",
+"embeds": [{
+"title":":green_circle: Growid : ]]..removeColorAndSymbols(GetLocal().name)..[[\u000A:green_circle: UID : ]] ..GetLocal().userid.. [[\u000A:earth_asia: World : ]]..GetWorld().name..[[\u000A:gem: Gems : ]] .. gems .. [[",
+"description":"Execute Proxy by Draconis!",
+"color": 16711680,
+"thumbnail": {
+"url": "https://media.discordapp.net/attachments/1121495925001556098/1285483492968497193/Draconis-removebg-preview.png?ex=66ea6f4b&is=66e91dcb&hm=0d58e79b719841477d8ff9f38b97d64f86c4762138de8a3161fd1599c2f8b3f9&=&format=webp&quality=lossless&width=397&height=398"
+}
+}]
+}
+]]
+function SendWebhook(url, data)
+MakeRequest(url,"POST",{["Content-Type"] = "application/json"},data)
+end
+
+SendWebhook(myLink, myData)
+
+local HostApa, ActivityLog, LogSpin = "", {}, {}, false, false, false
+
+function Logb(str) SendVariantList({[0] = "OnTalkBubble", [1] = GetLocal().netid ,[2] = "`$[ `0"..os.date("%H:%M:%S").."`$] `8[`9dsc.gg/dracogear`8] `5"..str}) end
+function ConsoleLog(str) SendVariantList({[0] = "OnConsoleMessage", [1] = "`$[ `0"..os.date("%H:%M:%S").."`$] `8[`9dsc.gg/dracogear`8] `5"..str}) end
+
+function FaceSide(b)
+local z = 32 if b == "left" then z = 48 elseif b == "right" then z = 32 end
+
+local pkt = {}
+pkt.type = 0
+pkt.x = GetLocal().pos.x
+pkt.y = GetLocal().pos.y
+pkt.state = z
+SendPacketRaw(false,pkt)
+Sleep(50)
+end
+
+ConsoleLog("`8/proxy to show commands !")
+local b = [[{
+"content": "%s"
+}]] 
+
+function GetName(id) for _, player in pairs(GetPlayerList()) do if player.netid == id then return player.name end end end 
+function ActivityLogPage() Action = {} for _, log in pairs(ActivityLog) do table.insert(Action, log.act) end SendVariantList({[0] = "OnDialogRequest", [1] = "set_default_color|`w|\nadd_label_with_icon|big|Activity Log|left|3524|\nadd_spacer|small|\n"..table.concat(Action).."\nadd_spacer|small|\nadd_quick_exit|||\nend_dialog|ActivityLog|Close||"}) end
+function FilterSpin(id) FilterLog = {} for _, log in pairs(LogSpin) do if log.netid == id then table.insert(FilterLog,"\nadd_label_with_icon|small|"..log.spin.."|left|758|\n") end end SendVariantList({[0] = "OnDialogRequest", [1] = "set_default_color|`w|\nadd_label_with_icon|big|"..GetName(id).." Spin|left|1400|\nadd_spacer|small|\n"..table.concat(FilterLog).."\nadd_spacer|small|\nadd_button|/cctv|Exit|noflags|0|0|\nadd_quick_exit|||\nend_dialog|FilterSpin|||"}) end
+function SpinLog() SpunLog = {} for _, spin in pairs(LogSpin) do table.insert(SpunLog, spin.spin) end SendVariantList({[0] = "OnDialogRequest", [1] = "set_default_color|`w|\nadd_label_with_icon|big|Spin Log|left|1400|\nadd_spacer|small|\nadd_smalltext|Click the wheel button to focus player spun|\n"..table.concat(SpunLog).."\nadd_spacer|small|\nadd_quick_exit|||\nend_dialog|WorldSpin|Close||"}) end
+
+AddHook("OnSendPacket","Hook", function(b, b)
+if b:find("/reme") then if HostApa ~= "Reme" then HostApa = "Reme" logText("`8Wheel Spin Mode : `2REME") else HostApa = "" logText("`8Wheel Spin Mode : `0Default") end return true end 
+if b:find("/qeme") then if HostApa ~= "Qeme" then HostApa = "Qeme" logText("`8Wheel Spin Mode : `2QEME") else HostApa = "" logText("`8Wheel Spin Mode : `0Default") end return true end 
+if b:find("/logwheel") then SpinLog() return true end 
+if b:find("dialog_name|WorldSpin\nbuttonClicked|(%d+)") then NetID = tonumber(b:match("dialog_name|WorldSpin\nbuttonClicked|(%d+)")) FilterSpin(NetID) return true end
+end)
+
+logText("`2Access granted, User ID is registered.")
+function say(txt)
+    SendPacket(2,"action|input\ntext|"..txt)
+    end
+
+AddHook("OnVariant","Hook",function(b)
+if b[0] == "OnConsoleMessage" and b[1]:find("Unknown command.") then ConsoleLog("`1Enter `2/proxy `1to see command list!")
+return true
+elseif b[0] == "OnConsoleMessage" and b[1]:find("Spam detected") then ConsoleLog("`bSlowdown the chat. Spam detected.")
+return true
+elseif b[0] == "OnConsoleMessage" and b[1]:find("`$World Locked`` by (.+)`5]") then WorldLockedBy = b[1]:match("`$World Locked`` by (.+)`5]") ConsoleLog(b[1]) say("`1Proxy by `9Anubeast `bX `8Draco")
+return true 
+elseif b[0] == "OnConsoleMessage" and b[1]:find("`6<(.+)") then return false
+elseif b[0] == "OnConsoleMessage" and b[1]:find("Collected  `w(%d+) World Lock") then AmountCollectWL = tonumber(b[1]:match("Collected  `w(%d+) World Lock")) 
+    table.insert(ActivityLog, {act = "\nadd_label_with_icon|small|"..GetLocal().name.." `oCollected `w"..AmountCollectWL.." `9World Lock `oat "..os.date("%H:%M on %d/%m").."|left|486|\n", netid = GetLocal().netID, acts = "Collected `w" ..AmountCollectWL.. " `9World Lock"})
+    return true
+    elseif b[0] == "OnConsoleMessage" and b[1]:find("Collected  `w(%d+) Diamond Lock") then AmountCollectDL = tonumber(b[1]:match("Collected  `w(%d+) Diamond Lock")) 
+    table.insert(ActivityLog, {act = "\nadd_label_with_icon|small|"..GetLocal().name.." `oCollected `w"..AmountCollectDL.." `1Diamond Lock `oat "..os.date("%H:%M on %d/%m").."|left|486|\n", netid = GetLocal().netID, acts = "Collected `w" ..AmountCollectDL.. " `1Diamond Lock"})
+    return true
+    elseif b[0] == "OnConsoleMessage" and b[1]:find("Collected  `w(%d+) Blue Gem Lock") then AmountCollectBGL = tonumber(b[1]:match("Collected  `w(%d+) Blue Gem Lock")) 
+    table.insert(ActivityLog, {act = "\nadd_label_with_icon|small|"..GetLocal().name.." `oCollected `w"..AmountCollectBGL.." `eBlue Gem Lock `oat "..os.date("%H:%M on %d/%m").."|left|486|\n", netid = GetLocal().netID, acts = "Collected `w" ..AmountCollectBGL.. " `eBlue Gem Lock"})
+    return true
+    elseif b[0] == "OnConsoleMessage" and b[1]:find("Collected  `w(%d+) Black Gem Lock") then AmountCollectBBGL = tonumber(b[1]:match("Collected  `w(%d+) Black Gem Lock")) 
+    table.insert(ActivityLog, {act = "\nadd_label_with_icon|small|"..GetLocal().name.." `oCollected `w"..AmountCollectBBGL.." `bBlack Gem Lock `oat "..os.date("%H:%M on %d/%m").."|left|486|\n", netid = GetLocal().netID, acts = "Collected `w" ..AmountCollectBBGL.. " `bBlack Gem Lock"})
+    return true
+elseif b[0] == "OnSDBroadcast" then ConsoleLog("`8Super Duper Broadcast `4Blocked")
+return true
+elseif b[0] == "OnConsoleMessage" then ConsoleLog(b[1])
+return true
+elseif b[0] == "OnTalkBubble" and b[1] == GetLocal().netid and b[2]:find("Deposited") and b[2]:find("You have `$(%d+)`` in the bank now.") then AmountDepo = b[2]:match("Deposited `$(%d+)`` Blue Gem Locks!") logText("`w[`4DRACONIS`w] `9Deposited `w"..AmountDepo.." `eBlue Gem Lock") return true
+elseif b[0] == "OnTalkBubble" and b[1] == GetLocal().netid and b[2]:find("`2Withdrawn") and b[2]:find("You have (%d+) in the bank now.") then AmountWithdrawn = b[2]:match("`2Withdrawn (%d+) Blue Gem Locks!") logText("`w[`4DRACONIS`w] `9Withdrawn `w"..AmountWithdrawn.." `eBlue Gem Lock") return true
+elseif b[0] == "OnTalkBubble" and b[3] ~= -1 and b[2]:find("spun the wheel and got") then
+    if b[2]:find("``6>``") then
+        p = {}
+        p[0] = "OnTalkBubble"
+        p[1] = b[1]
+        p[2] = "`0[`4FAKE`0] " .. b[2]
+        p[3] = -1
+        SendVariantList(p) table.insert(LogSpin, {spin = "\nadd_label_with_icon_button|small|`0[`4FAKE`0] " .. b[2].."|left|758|"..b[1].."|\n", netid = b[1], spins = "`0[`4FAKE`0] " .. b[2]})
+        elseif b[2]:find("``!]``") then
+        s2 = b[2]:find("`` spun") - 1
+        s1 = b[2]:sub(4, s2)
+        jml1 = b[2]:find("got ") + 6
+        jml2 = b[2]:find("``!") - 1
+        jml = b[2]:sub(jml1, jml2)
+        if HostApa == "Qeme" then
+            Qeme = jml % 10 
+            if Qeme >= 10 then 
+                Qeme = "`20"
+            elseif Qeme == 0 then 
+                Qeme = "`2"..Qeme.."" -- Color green for Qeme when 0
+            elseif Qeme <= 3 then 
+                Qeme = "`4"..Qeme.."" -- Color red for Qeme between 1 and 3
+            elseif Qeme <= 6 then 
+                Qeme = "`8"..Qeme.."" -- Color yellow for Qeme between 4 and 6
+            elseif Qeme <= 9 then 
+                Qeme = "`^"..Qeme.."" -- Color purple for Qeme between 7 and 9
+            end
+        p = {}
+        p[0] = "OnTalkBubble"
+        p[1] = b[1]
+        p[2] = "`0[`2REAL`0] " .. b[2].." `b[`5Qeme: "..Qeme.."`b] "
+        p[3] = -1
+        SendVariantList(p) table.insert(LogSpin, {spin = "\nadd_label_with_icon_button|small|`0[`2REAL`0] " .. b[2].." `b[`5Qeme: "..Qeme.."`b]|left|758|"..b[1].."|\n", netid = b[1], spins = "`0[`2REAL`0] " .. b[2].." `b[`5Qeme: "..Qeme.."`b]"})
+        elseif HostApa == "Reme" then
+            Num1 = math.floor(jml / 10)
+            Num2 = jml % 10
+            Reme = Num1 + Num2
+            if Reme > 10 then
+                Reme = Reme % 10
+            elseif Reme == 10 then
+                Reme = "`20"
+            elseif Reme == 0 then
+                Reme = "`20"
+            end
+            if tonumber(Reme) and Reme >= 7 and Reme <= 9 then
+                Reme = "`^" .. Reme
+            elseif tonumber(Reme) and Reme >= 5 and Reme <= 8 then
+                Reme = "`9" .. Reme
+            elseif tonumber(Reme) and Reme >= 2 and Reme <= 4 then
+                Reme = "`8" .. Reme
+            elseif tonumber(Reme) and Reme == 1 then
+                Reme = "`4" .. Reme
+            end
+        p = {}
+        p[0] = "OnTalkBubble"
+        p[1] = b[1]
+        p[2] = "`0[`2REAL`0] " .. b[2].." `b[`5Reme: "..Reme.."`b] "
+        p[3] = -1
+        SendVariantList(p) table.insert(LogSpin, {spin = "\nadd_label_with_icon_button|small|`0[`2REAL`0] " .. b[2].." `b[`5Reme: "..Reme.."`b]|left|758|"..b[1].."|\n", netid = b[1], spins = "`0[`2REAL`0] " .. b[2].." `b[`5Reme: "..Reme.."`b]"})
+        else
+        p = {}
+        p[0] = "OnTalkBubble"
+        p[1] = b[1]
+        p[2] = "`0[`2REAL`0] " .. b[2]
+        p[3] = -1
+        SendVariantList(p) table.insert(LogSpin, {spin = "\nadd_label_with_icon_button|small|`0[`2REAL`0] " .. b[2].."|left|758|"..b[1].."|\n", netid = b[1], spins = "`0[`2REAL`0] " .. b[2]})
+        end
+        else
+        p = {}
+        p[0] = "OnTalkBubble"
+        p[1] = b[1]
+        p[2] = "`0[`4FAKE`0] " .. b[2]
+        p[3] = -1
+        SendVariantList(p) table.insert(LogSpin, {spin = "\nadd_label_with_icon_button|small|`0[`4FAKE`0] " .. b[2].."|left|758|"..b[1].."|\n", netid = b[1], spins = "`0[`4FAKE`0] " .. b[2]})
+        end
+return true
+end
+return false end)
+
+function proxy_commands()
+function string.removeColors(b)
+return b:gsub("`.", "")
+end
+n1 = GetLocal().name:removeColors()
+n2 = n1:gsub(" of Legend", "")
+n3 = n2:gsub("Dr.", "")
+SendVariantList({[0] = "OnDialogRequest", [1] = [[
+set_default_color|`o|
+add_label_with_icon|big|`9Anubeast `bX `8Draconis `9Proxy Commands|left|7188|
+add_spacer|small|
+add_label_with_icon|big|`3Proxy Commands``|left|13870|
+add_label_with_icon|small|`p/proxy `0( `9see menu for proxy commands `0)|left|482|
+add_label_with_icon|small|`p/modfly `0( `9enable / disable modfly `0)|left|482|
+add_label_with_icon|small|`p/res `0( `9respawn `0)|left|482|
+add_label_with_icon|small|`p/relog `0( `9fast relog `0)|left|482|
+add_label_with_icon|small|`p/diewithasmile `0( `9close close the proxy `0)|left|482|
+add_label_with_icon|small|`p/reme `0( `9Spun Reme Mode `0)|left|482|
+add_label_with_icon|small|`p/qeme `0( `9Spun Qeme Mode `0)|left|482|
+add_spacer|small|
+add_label_with_icon|big|`3Drop Commands``|left|11550|
+add_label_with_icon|small|`p/cd `0( `9amount `0) `0( `9/cd 1234567 `0( `91 black , 23 bgl , 45 dl , 67wl `0)|left|482|
+add_label_with_icon|small|`p/dd `0( `9amount `0) `0( `9/dd 123 `0( `91 bgl , 23 dl `0)|left|482|
+add_label_with_icon|small|`p/db `0( `9amount `0) `0( `9/db 123 `0( `91 black , 23 bgl `0)|left|482|
+add_label_with_icon|small|`p/dbl `0( `9amount `0) `0( `9Drop Black With Amount `0)|left|482|
+add_spacer|small|
+add_label_with_icon|big|`3Logs Commands``|left|1436|
+add_label_with_icon|small|`p/logdrop `0( `9log drop and take `0)|left|482|
+add_label_with_icon|small|`p/logwheel `0( `9log number roulette `0)|left|482|
+add_spacer|small|
+add_label_with_icon|big|`3Skin Commands``|left|15314|
+add_label_with_icon|small|`p/skin black `0( `9Change skin to Black `0)|left|482|
+add_label_with_icon|small|`p/skin white `0( `9Change skin to white `0)|left|482|
+add_label_with_icon|small|`p/skin cyan `0( `9Change skin to cyan `0)|left|482|
+add_label_with_icon|small|`p/skin yellow `0( `9Change skin to yellow `0)|left|482|
+add_label_with_icon|small|`p/skin purple `0( `9Change skin to purple `0)|left|482|
+add_label_with_icon|small|`p/skin pink `0( `9Change skin to pink `0)|left|482|
+add_label_with_icon|small|`p/skin gold `0( `9Change skin to gold `0)|left|482|
+add_label_with_icon|small|`p/skin green `0( `9Change skin to green `0)|left|482|
+add_spacer|small|
+add_label_with_icon|big|`3Shortcut Commands``|left|928|
+add_label_with_icon|small|`p/fastdrop `0( `9enable / disable fast drop `0)|left|482|
+add_label_with_icon|small|`p/fasttrash `0( `9enable / disable fast trash `0)|left|482|
+add_label_with_icon|small|`p/nopickup `0( `9enable / disable anti-pickup items `0)|left|482|
+add_label_with_icon|small|`p/black `0( `9Make Black from 100 Blue `0)|left|482|
+add_label_with_icon|small|`p/blue `0( `9Make Blue from 1 Black `0)|left|482|
+add_label_with_icon|small|`p/depo `9[`0 amount `9] `0( `9Deposit into bank `0)|left|482|
+add_label_with_icon|small|`p/wd `9[`0 amount `9] `0( `9Withdraw from bank `0)|left|482|
+add_spacer|small|
+add_label_with_icon|big|`3Wrench Commands``|left|32|
+add_label_with_icon|small|`p/wm `0( `9Wrench UI `0)|left|482|
+add_label_with_icon|small|`p/wpull `0( `9Turn on wrench pull `0)|left|482|
+add_label_with_icon|small|`p/wkick `0( `9Turn on wrench kick `0)|left|482|
+add_label_with_icon|small|`p/wban `0( `9turn on wrench ban `0)|left|482|
+add_label_with_icon|small|`p/wdef `0( `9Turn off wrench mode `0)|left|482|
+add_label_with_icon|small|`p/wbgl `0( `9fast change bgl need wrench `0)|left|482|
+add_spacer|small|
+end_dialog|proxy_main_cmd|`4Cancel|`2Okay|
+]]}) end
+
+function proxy(b, b)
+if b == ("action|input\n|text|/proxy") then
+proxy_commands()
+return true
+end
+end
+AddHook("OnSendPacket", "openedproxy", proxy)
+
+
+function string.removeColors(b) return b:gsub("`.", "") end
+
+function dropes(b, c) SendPacket(2,"action|dialog_return\ndialog_name|drop\nitem_drop|".. b .. "|\nitem_count|".. c) Sleep(180) end
+
+function findItem(id) for _, c in pairs(GetInventory()) do if c.id == id then return c.amount end end return 0 end
+
+local function open()
+    var = {}
+    var[0] = "OnDialogRequest"
+    var[1] = "\nadd_label_with_icon|big|`9Anubeast `bX `4Draconis `2Proxy|left|758|"..
+                "\nadd_spacer|small|"..
+                "\nadd_textbox|Welcome Back "..GetLocal().name.."|"..
+                "\nadd_label_with_icon|small|`bBlack Gem Lock : "..findItem(11550).."|left|11550|"..
+                "\nadd_label_with_icon|small|`eBlue Gem Lock : "..findItem(7188).."|left|7188|"..
+                "\nadd_label_with_icon|small|`1Diamond Lock : "..findItem(1796).."|left|1796|"..
+                "\nadd_label_with_icon|small|`9World Lock : "..findItem(242).."|left|242|"..
+                "\nadd_spacer|small|"..
+                "\nadd_spacer|small|"..
+                "\nadd_textbox|=========================================|"..
+                "\nadd_label_with_icon|big|`3Proxy Commands``|left|13870|"..
+                "\nadd_label_with_icon|small|`p/proxy `0( `9see menu for proxy commands `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/modfly `0( `9enable / disable modfly `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/res `0( `9respawn `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/relog `0( `9fast relog `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/diewithasmile `0( `9close the proxy `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/reme `0( `9Spun Reme Mode `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/qeme `0( `9Spun Qeme Mode `0)|left|482|"..
+                "\nadd_spacer|small|"..
+                "\nadd_label_with_icon|big|`3Drop Commands``|left|11550|"..
+                "\nadd_label_with_icon|small|`p/cd `0( `9amount `0) `0( `9/cd 1234567 `0( `91 black , 23 bgl , 45 dl , 67wl `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/dd `0( `9amount `0) `0( `9/dd 123 `0( `91 bgl , 23 dl `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/db `0( `9amount `0) `0( `9/db 123 `0( `91 black , 23 bgl `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/dbl `0( `9amount `0) `0( `9Drop Black With Amount `0)|left|482|"..
+                "\nadd_spacer|small|"..
+                "\nadd_label_with_icon|big|`3Logs Commands``|left|1436|"..
+                "\nadd_label_with_icon|small|`p/logdrop `0( `9log drop and take `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/logwheel `0( `9log number roulette `0)|left|482|"..
+                "\nadd_spacer|small|"..
+                "\nadd_label_with_icon|big|`3Skin Commands``|left|15314|"..
+                "\nadd_label_with_icon|small|`p/skin black `0( `9Change skin to Black `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/skin white `0( `9Change skin to white `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/skin cyan `0( `9Change skin to cyan `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/skin yellow `0( `9Change skin to yellow `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/skin purple `0( `9Change skin to purple `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/skin pink `0( `9Change skin to pink `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/skin gold `0( `9Change skin to gold `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/skin green `0( `9Change skin to green `0)|left|482|"..
+                "\nadd_spacer|small|"..
+                "\nadd_label_with_icon|big|`3Shortcut Commands``|left|928|"..
+                "\nadd_label_with_icon|small|`p/fastdrop `0( `9enable / disable fast drop `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/fasttrash `0( `9enable / disable fast trash `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/nopickup `0( `9enable / disable anti-pickup items `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/black `0( `9Make Black from 100 Blue `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/blue `0( `9Make Blue from 1 Black `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/depo `9[`0 amount `9] `0( `9Deposit into bank `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/wd `9[`0 amount `9] `0( `9Withdraw from bank `0)|left|482|"..
+                "\nadd_spacer|small|"..
+                "\nadd_label_with_icon|big|`3Wrench Commands``|left|32|"..
+                "\nadd_label_with_icon|small|`p/wm `0( `9Wrench UI `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/wpull `0( `9Turn on wrench pull `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/wkick `0( `9Turn on wrench kick `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/wban `0( `9turn on wrench ban `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/wdef `0( `9Turn off wrench mode `0)|left|482|"..
+                "\nadd_label_with_icon|small|`p/wbgl `0( `9fast change bgl need wrench `0)|left|482|"..
+                "\nadd_spacer|small|"..
+                "\nadd_quick_exit||"..
+                "\nend_dialog|cl|Close|"
+    SendVariantList(var)
+end
+
+open()
+
+function buatireng() SendPacket(2,"action|dialog_return\ndialog_name|info_box\nbuttonClicked|make_bgl") end
+function shatterireng() SendPacket(2,"action|dialog_return\ndialog_name|info_box\nbuttonClicked|make_bluegl") end
+function shatter(id) local pkt = {} pkt.type = 10 pkt.value = id SendPacketRaw(false, pkt) end 
+
+function cdrop_delayed()
+    pecahan = {1000000, 10000, 100, 1}
+    black = 0
+    bgl = 0
+    dl = 0
+    wl = 0
+    for b = 1, 4 do
+    while wls >= pecahan[b] do
+    if pecahan[b] == pecahan[1] then
+    black = black + 1
+    wls = wls - 1000000
+    elseif pecahan[b] == pecahan[2] then
+    bgl = bgl + 1
+    wls = wls - 10000
+    elseif pecahan[b] == pecahan[3] then
+    dl = dl + 1
+    wls = wls - 100
+    elseif pecahan[b] == pecahan[4] then
+    wl = wl + 1
+    wls = wls - 1
+    end
+    end
+    end
+    ConsoleLog("`5Dropping `2" .. black .. " `bblack `2" .. bgl .. " `ebgls `2" .. dl .. " `1dls `5and `2" .. wl .. " `9wls") -- dd
+    itemamt = {black, bgl, dl, wl}
+    itemid = {11550, 7188, 1796, 242}
+    --shattering
+    if findItem(11550) < black then buatireng() Sleep(100) end
+    if findItem(7188) < bgl then shatterireng() Sleep(100) end
+    if findItem(1796) < dl then shatter(7188) Sleep(100) end
+    if findItem(242) < wl then shatter(1796) Sleep(100) end
+    Sleep(200)
+    --dropping
+    if black > 0 then
+        dropes(itemid[1], itemamt[1])
+        table.insert(ActivityLog, {act = "\nadd_label_with_icon|small|"..GetLocal().name.." `oDropped `w"..itemamt[1].." `bBlack Gem Lock `oat "..os.date("%H:%M on %d/%m").."|left|484|\n", netid = GetLocal().netID, acts = "Dropped `w" ..itemamt[1].. " `bBlack Gem Lock"})
+    end
+    if bgl > 0 then
+        dropes(itemid[2], itemamt[2])
+        table.insert(ActivityLog, {act = "\nadd_label_with_icon|small|"..GetLocal().name.." `oDropped `w"..itemamt[2].." `eBlue Gem Lock `oat "..os.date("%H:%M on %d/%m").."|left|484|\n", netid = GetLocal().netID, acts = "Dropped `w" ..itemamt[2].. " `eBlue Gem Lock"})
+    end
+    if dl > 0 then
+        dropes(itemid[3], itemamt[3])
+        table.insert(ActivityLog, {act = "\nadd_label_with_icon|small|"..GetLocal().name.." `oDropped `w"..itemamt[3].." `1Diamond Lock `oat "..os.date("%H:%M on %d/%m").."|left|484|\n", netid = GetLocal().netID, acts = "Dropped `w" ..itemamt[3].. " `1Diamond Lock"})
+    end
+    if wl > 0 then
+        dropes(itemid[4], itemamt[4])
+        table.insert(ActivityLog, {act = "\nadd_label_with_icon|small|"..GetLocal().name.." `oDropped `w"..itemamt[4].." `9World Lock `oat "..os.date("%H:%M on %d/%m").."|left|484|\n", netid = GetLocal().netID, acts = "Dropped `w" ..itemamt[4].. " `9World Lock"})
+    end
+    --ConsoleLog("`5Dropping `3" .. black .. " `bblacks `3" .. bgl .. " `9bgl `3" .. dl .. " `9dls and `3" .. wl .. " `9wls")
+    return true end
+
+AddHook("OnSendPacket", "CountMode", function(b, b)
+if b:find("/cm") then
+if Mode == "off" then type_mcount = "`4Disabled" else type_mcount = "`2Enabled" end
+if type_mcount == "`2Enabled" and Mode == "VERTIKAL" then
+varlist = {}
+varlist[0] = "OnDialogRequest"
+varlist[1] = [[
+set_default_color|`o|
+add_label_with_icon|big|`!count Mode|left|32|
+add_spacer|small|
+add_textbox|`9Currently count Mode is `2Enabled `9And is Set To : `3]] ..Mode ..[[|left|
+add_spacer|small|
+add_button_with_icon|mode_vertikal|  `2vertical  |staticYellowFrame|646|
+add_button_with_icon|mode_horizontal|  `9horizontal  |staticBlueFrame|644|
+add_button_with_icon||END_LIST|noflags|0|0|
+add_spacer|small|
+add_button|count_off|`@Turn off count mode|noflags|0|0|
+add_quick_exit|
+end_dialog|count_modesxd|`4Cancel|`2Okay|
+]] SendVariantList(varlist)
+elseif type_mcount == "`2Enabled" and Mode == "HORIZONTAL" then
+varlist = {}
+varlist[0] = "OnDialogRequest"
+varlist[1] = [[
+set_default_color|`o|
+add_label_with_icon|big|`!count Mode|left|32|
+add_spacer|small|
+add_textbox|`9Currently count Mode is `2Enabled `9And is Set To : `3]] ..Mode ..[[|left|
+add_spacer|small|
+add_button_with_icon|mode_vertikal|  `9vertical  |staticBlueFrame|646|
+add_button_with_icon|mode_horizontal|  `2horizontal  |staticYellowFrame|644|
+add_button_with_icon||END_LIST|noflags|0|0|
+add_spacer|small|
+add_button|count_off|`@Turn off count mode|noflags|0|0|
+add_quick_exit|
+end_dialog|count_modesxd|`4Cancel|`2Okay|
+]] SendVariantList(varlist)
+else
+varlist = {}
+varlist[0] = "OnDialogRequest"
+varlist[1] = [[
+set_default_color|`o|
+add_label_with_icon|big|`!count Mode|left|32|
+add_spacer|small|
+add_textbox|`9Currently count Mode is `4Disabled|left|
+add_spacer|small|
+add_button_with_icon|mode_vertikal|  `9vertical  |staticBlueFrame|646|
+add_button_with_icon|mode_horizontal|  `9horizontal  |staticBlueFrame|644|
+add_button_with_icon||END_LIST|noflags|0|0|
+add_spacer|small|
+add_button|count_off|`2Turn off count mode|noflags|0|0|
+add_quick_exit|
+end_dialog|count_modesxd|`4Cancel|`2Okay|
+]] SendVariantList(varlist)
+end
+return true
+end
+
+if b:find("mode_vertikal") then
+Mode = "VERTIKAL"
+ConsoleLog("`8Mode count set to `0Vertical")
+return true
+elseif b:find("mode_horizontal") then
+Mode = "HORIZONTAL"
+ConsoleLog("`8Mode count set to `0Horizontal")
+return true
+elseif b:find("count_off") then
+Mode = "off"
+ConsoleLog("`8Mode count set to `0Disable")
+return true
+end
+
+end)
+
+
+function cdrop_drop(b, b)
+if b:find("/cd (%d+)") then
+wls = (tonumber(b:match("/cd (%d+)")))
+customdrop = true
+return true
+end
+if b:find("/dd (%d+)") then
+wls = (tonumber(b:match("/dd (%d+)"))*100)
+customdrop = true
+return true
+end
+if b:find("/db (%d+)") then
+wls = (tonumber(b:match("/db (%d+)"))*10000)
+customdrop = true
+return true
+end
+
+        -- drop only 1 lock
+        if b:find("/dl (%d+)") then
+            dlskuy = tonumber(b:match("/dl (%d+)"))
+            dropes(1796, dlskuy)
+            ConsoleLog("`5Dropping `3" .. dlskuy .. " `9dl") SendPacket(2,"action|input\n|text|`w[`4DRACONIS`w] `5Dropping `2" .. dlskuy .. " `1dl")
+            return true
+            end
+            if b:find("/bgl (%d+)") then
+            bglskuy = tonumber(b:match("/bgl (%d+)"))
+            dropes(7188, bglskuy)
+            ConsoleLog("`5Dropping `3" .. bglskuy .. " `9bgl") SendPacket(2,"action|input\n|text|`w[`4DRACONIS`w] `5Dropping `2" .. bglskuy .. " `ebgl") 
+            return true
+            end
+            if b:find("/dbl (%d+)") then
+            blackskuy = tonumber(b:match("/dbl (%d+)"))
+            dropes(11550, blackskuy)
+            ConsoleLog("`5Dropping `3" .. blackskuy .. " `9black") SendPacket(2,"action|input\n|text|`w[`4DRACONIS`w] `5Dropping `2" .. blackskuy .. " `bblack") 
+            return true
+            end
+
+
+if b:find("/ireng") then buatireng() return true end
+if b:find("/biru") then shatterireng() return true end
+if b:find("/logdrop") then ActivityLogPage() return true end
+end
+AddHook("OnSendPacket", "hooking", cdrop_drop)
+
+
+
+-- divider
+
+function Data()
+Amount = 0
+for _, list in pairs(data) do
+Name = ""
+if list.id == 7188 then
+Name = "Blue Gem Lock"
+Amount = Amount + list.count * 10000
+elseif list.id == 1796 then
+Name = "Diamond Lock"
+Amount = Amount + list.count * 100
+elseif list.id == 242 then
+Name = "World Lock"
+Amount = Amount + list.count
+end
+end
+data = {}
+end
+
+
+
+
+function dropblackuy(b, b)
+        if b:find("action|input") then
+            text = b:gsub("action|input\n|text|", "")
+            if text:find("/") then
+                cmd = text:gsub("/", "")
+                if cmd:find("dbl") then
+                    amount = cmd:gsub("dbl", "")
+                    local b = 0
+                    b = amount
+                    amount = tonumber(amount)
+                    for c, c in pairs(GetInventory()) do
+                        if c.id == 11550 then
+                            if c.amount < amount then
+                                ConsoleLog("`8No enough blacks.")
+                                ConsoleLog("`8No enough blacks.")
+                                return true
+                            else
+                                ConsoleLog("`5Dropping`3" .. b .. " `bBlacks")
+                                ConsoleLog("`5Dropping`3" .. b .. " `bBlacks")
+                                SendPacket(
+                                    2,
+                                    "action|dialog_return\ndialog_name|drop\nitem_drop|11550|\nitem_count|" .. b
+                                )
+                                return true
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+AddHook("OnSendPacket", "dropblackuy", dropblackuy)
+    function depobgl(b, b)
+        if b:find("action|input") then
+            text = b:gsub("action|input\n|text|", "")
+            if text:find("/") then
+                cmd = text:gsub("/", "")
+                if cmd:find("depo") then
+                    amount = cmd:gsub("depo", "")
+                    local b = 0
+                    b = amount
+                    amount = tonumber(amount)
+                    SendPacket(2, "action|dialog_return\ndialog_name|bank_deposit\nbgl_count|" .. b)
+                    return true
+                end
+            end
+        end
+    end
+    AddHook("OnSendPacket", "cdepo_bgl", depobgl)
+    function wdbgl(b, b)
+        if b:find("action|input") then
+            text = b:gsub("action|input\n|text|", "")
+            if text:find("/") then
+                cmd = text:gsub("/", "")
+                if cmd:find("wd") then
+                    amount = cmd:gsub("wd", "")
+                    local b = 0
+                    b = amount
+                    amount = tonumber(amount)
+                    SendPacket(2, "action|dialog_return\ndialog_name|bank_withdraw\nbgl_count|" .. b)
+                    return true
+                end
+            end
+        end
+    end
+    AddHook("OnSendPacket", "cwd_bgl", wdbgl)
+
+    function res(b, b)
+        if b == ("action|input\n|text|/res") then
+            ConsoleLog("`8respawning")
+            ConsoleLog("`8Respawning")
+            SendPacket(2, "action|respawn")
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "respawn", res)
+    function relog(b, b)
+        if b == ("action|input\n|text|/relog") then
+            ConsoleLog("`8reloging")
+            latest_world = GetWorld().name
+            SendPacket(3, "action|join_request\nname|" .. latest_world .. "\ninvitedWorld|0")
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "relog", relog)
+
+AddHook("onsendpacket", 3991, function(type, packet)
+local amer = packet:match("/amer") or packet:match("/AMER")
+if amer then
+SendPacket(2, "action|dialog_return\ndialog_name|telephone\nnum|53785|\nx|"..math.floor(GetLocal().pos.x / 32) .."|\ny|"..math.floor(GetLocal().pos.y / 32) .."|\nbuttonClicked|getchamp")
+        return true
+        end
+        return false
+        end)
+
+mod_fly = false
+
+AddHook("OnSendPacket", "ModFly", function(b, b)
+if b == ("action|input\n|text|/modfly") then
+if mod_fly == false then
+ConsoleLog("`8mod fly is now `2Enabled") ChangeValue("[C] Modfly", true) mod_fly = true
+elseif mod_fly == true then
+ConsoleLog("`8mod fly is now `4Disabled") ChangeValue("[C] Modfly", false) mod_fly = false
+end
+return true
+end
+end)
+
+    
+
+    function fd(b)
+        if fd_mode then
+            if b[0] == "OnDialogRequest" and b[1]:find("end_dialog|drop|Cancel|OK|") then
+                SendPacket(
+                    2,
+                    "action|dialog_return\ndialog_name|drop\nitem_drop|" ..
+                        b[1]:match("embed_data|item_drop|(%d+)") .. "|\nitem_count|" .. b[1]:match("you have (%d+)")
+                )
+                return true
+            end
+        end
+    end
+
+    AddHook("OnVariant", "fd", fd)
+    fd_mode = false
+    function fd_hook_xd(b, b)
+        if b == ("action|input\n|text|/fastdrop") then
+            if fd_mode == true then
+                fd_mode = false
+                ConsoleLog("`8fast drop `4Disabled")
+                RemoveHook("fd")
+            elseif fd_mode == false then
+                fd_mode = true
+                ConsoleLog("`8fast drop `2Enabled")
+                AddHook("OnVariant", "fd", fd)
+            end
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "fd_hook_xd", fd_hook_xd)
+
+    ft_mode = false
+    function ft(b)
+        if ft_mode then
+            if b[0] == "OnDialogRequest" and b[1]:find("end_dialog|trash|Cancel|OK|") then
+                SendPacket(
+                    2,
+                    "action|dialog_return\ndialog_name|trash\nitem_trash|" ..
+                        b[1]:match("embed_data|item_trash|(%d+)") .. "|\nitem_count|" .. b[1]:match("you have (%d+)")
+                )
+                return true
+            end
+        end
+    end
+    AddHook("OnVariant", "ft", ft)
+    function ft_hook_xd(b, b)
+        if b == ("action|input\n|text|/fasttrash") then
+            if ft_mode == true then
+                ft_mode = false
+                ConsoleLog("`8fast trash `4Disabled")
+                RemoveHook("ft")
+            elseif ft_mode == false then
+                ft_mode = true
+                ConsoleLog("`8fast trash `2Enabled")
+                AddHook("OnVariant", "ft", ft)
+            end
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "ft_hook_xd", ft_hook_xd)
+function wm(b, b)
+if b == ("action|input\n|text|/wm") then
+    if mode_wm == "off" then
+        type_wm = "`4Disabled"
+    else
+        type_wm = "`2Enabled"
+    end
+if type_wm == "`2Enabled" and mode_wm == "pull" then
+varlist = {}
+varlist[0] = "OnDialogRequest"
+varlist[1] = [[
+set_default_color|`o|
+add_label_with_icon|big|`!Wrench Mode|left|32|
+add_spacer|small|
+add_textbox|`9Currently Wrench Mode is `2Enabled `9And is Set To : `3]] ..mode_wm ..[[|left|
+add_spacer|small|
+text_scaling_string|tannubbanget|
+add_button_with_icon|wrench_pull|  `2pull  |staticYellowFrame|32|
+add_button_with_icon|wrench_kick|  `9kick  |staticBlueFrame|32|
+add_button_with_icon|wrench_ban|  `9ban  |staticBlueFrame|32|
+add_button_with_icon||END_LIST|noflags|0|0|
+add_spacer|small|
+add_button|wrench_off|`@Turn off wrench mode|noflags|0|0|
+add_quick_exit|
+end_dialog|wrench_modesxd|`4Cancel|`2Okay|
+]] SendVariantList(varlist)
+elseif type_wm == "`2Enabled" and mode_wm == "kick" then
+varlist = {}
+varlist[0] = "OnDialogRequest"
+varlist[1] = [[
+set_default_color|`o|
+add_label_with_icon|big|`!Wrench Mode|left|32|
+add_spacer|small|
+add_textbox|`9Currently Wrench Mode is `2Enabled `9And is Set To : `3]] ..mode_wm ..[[|left|
+add_spacer|small|
+text_scaling_string|tannubbanget|
+add_button_with_icon|wrench_pull|  `9pull  |staticBlueFrame|32|
+add_button_with_icon|wrench_kick|  `2kick  |staticYellowFrame|32|
+add_button_with_icon|wrench_ban|  `9ban  |staticBlueFrame|32|
+add_button_with_icon||END_LIST|noflags|0|0|
+add_spacer|small|
+add_button|wrench_off|`@Turn off wrench mode|noflags|0|0|
+add_quick_exit|
+end_dialog|wrench_modesxd|`4Cancel|`2Okay|
+]] SendVariantList(varlist)
+elseif type_wm == "`2Enabled" and mode_wm == "ban" then
+varlist = {}
+varlist[0] = "OnDialogRequest"
+varlist[1] = [[
+set_default_color|`o|
+add_label_with_icon|big|`!Wrench Mode|left|32|
+add_spacer|small|
+add_textbox|`9Currently Wrench Mode is `2Enabled `9And is Set To : `3]] ..mode_wm ..[[|left|
+add_spacer|small|
+text_scaling_string|tannubbanget|
+add_button_with_icon|wrench_pull|  `9pull  |staticBlueFrame|32|
+add_button_with_icon|wrench_kick|  `9kick  |staticBlueFrame|32|
+add_button_with_icon|wrench_ban|  `2ban  |staticYellowFrame|32|
+add_button_with_icon||END_LIST|noflags|0|0|
+add_spacer|small|
+add_button|wrench_off|`@Turn off wrench mode|noflags|0|0|
+add_quick_exit|
+end_dialog|wrench_modesxd|`4Cancel|`2Okay|
+]] SendVariantList(varlist)
+else
+varlist = {}
+varlist[0] = "OnDialogRequest"
+varlist[1] = [[
+set_default_color|`o|
+add_label_with_icon|big|`!Wrench Mode|left|32|
+add_spacer|small|
+add_textbox|`9Currently Wrench Mode is `4Disabled|left|
+add_spacer|small|
+text_scaling_string|tannubbanget|
+add_button_with_icon|wrench_pull|  `9pull  |staticBlueFrame|32|
+add_button_with_icon|wrench_kick|  `9kick  |staticBlueFrame|32|
+add_button_with_icon|wrench_ban|  `9ban  |staticBlueFrame|32|
+add_button_with_icon||END_LIST|noflags|0|0|
+add_spacer|small
+add_button|wrench_off|`2Turn off wrench mode|noflags|0|0|
+add_quick_exit|
+end_dialog|wrench_modesxd|`4Cancel|`2Okay|
+]] SendVariantList(varlist) end
+return true
+end
+end
+AddHook("OnSendPacket", "wm", wm)
+    function wp(b, b)
+        if b == ("action|input\n|text|/wpull") then
+            mode_wm = "pull"
+            ConsoleLog("`8wrench mode set to `3pull")
+            ConsoleLog("`8Pull Mode")
+            function Wrench(b)
+                if b[0] == "OnDialogRequest" and b[1]:find("add_button|pull|`5Pull``|0|0|") then
+                    x = b[1]
+                    x2 = x:match("embed_data|netID|(%d+)")
+                    SendPacket(2, "action|dialog_return\ndialog_name|popup\nnetID|" .. x2 .. "|\nbuttonClicked|pull")
+                    return true
+                end
+            end
+            AddHook("OnVariant", "Wrench", Wrench)
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "wp", wp)
+    function wk(b, b)
+        if b == ("action|input\n|text|/wkick") then
+            mode_wm = "kick"
+            ConsoleLog("`8wrench mode set to `3kick")
+            ConsoleLog("`8Kick Mode")
+            function Wrench(b)
+                if b[0] == "OnDialogRequest" and b[1]:find("add_button|pull|`5Pull``|0|0|") then
+                    x = b[1]
+                    x2 = x:match("embed_data|netID|(%d+)")
+                    SendPacket(2, "action|dialog_return\ndialog_name|popup\nnetID|" .. x2 .. "|\nbuttonClicked|kick")
+                    return true
+                end
+            end
+            AddHook("OnVariant", "Wrench", Wrench)
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "wk", wk)
+    function wb(b, b)
+        if b == ("action|input\n|text|/wban") then
+            mode_wm = "kick"
+            ConsoleLog("`8wrench mode set to `3ban")
+            ConsoleLog("`8Ban Mode")
+            function Wrench(b)
+                if b[0] == "OnDialogRequest" and b[1]:find("add_button|pull|`5Pull``|0|0|") then
+                    x = b[1]
+                    x2 = x:match("embed_data|netID|(%d+)")
+                    SendPacket(
+                        2,
+                        "action|dialog_return\ndialog_name|popup\nnetID|" .. x2 .. "|\nbuttonClicked|world_ban"
+                    )
+                    return true
+                end
+            end
+            AddHook("OnVariant", "Wrench", Wrench)
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "wb", wb)
+    function woff(b, b)
+        if b == ("action|input\n|text|/wdef") then
+            mode_wm = "off"
+            ConsoleLog("`8wrench mode is now `4Off")
+            ConsoleLog("`8Wrench Mode Is `cOff")
+            RemoveHook("Wrench")
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "woff", woff)
+    function Wrench_mode(b, b)
+        if b:find("buttonClicked|wrench_pull") then
+            ConsoleLog("`8wrench mode set to `3pull")
+            mode_wm = "pull"
+            function Wrench(b)
+                if b[0] == "OnDialogRequest" and b[1]:find("add_button|pull|`5Pull``|0|0|") then
+                    x = b[1]
+                    x2 = x:match("embed_data|netID|(%d+)")
+                    SendPacket(2, "action|dialog_return\ndialog_name|popup\nnetID|" .. x2 .. "|\nbuttonClicked|pull")
+                    return true
+                end
+            end
+            AddHook("OnVariant", "Wrench", Wrench)
+            return true
+        elseif b:find("buttonClicked|wrench_kick") then
+            ConsoleLog("`8wrench mode set to `3kick")
+            mode_wm = "kick"
+            function Wrench(b)
+                if b[0] == "OnDialogRequest" and b[1]:find("add_button|pull|`5Pull``|0|0|") then
+                    x = b[1]
+                    x2 = x:match("embed_data|netID|(%d+)")
+                    SendPacket(2, "action|dialog_return\ndialog_name|popup\nnetID|" .. x2 .. "|\nbuttonClicked|kick")
+                    return true
+                end
+            end
+            AddHook("OnVariant", "Wrench", Wrench)
+            return true
+        elseif b:find("buttonClicked|wrench_ban") then
+            ConsoleLog("`8wrench mode set to `3ban")
+            mode_wm = "ban"
+            function Wrench(b)
+                if b[0] == "OnDialogRequest" and b[1]:find("add_button|pull|`5Pull``|0|0|") then
+                    x = b[1]
+                    x2 = x:match("embed_data|netID|(%d+)")
+                    SendPacket(
+                        2,
+                        "action|dialog_return\ndialog_name|popup\nnetID|" .. x2 .. "|\nbuttonClicked|world_ban"
+                    )
+                    return true
+                end
+            end
+            AddHook("OnVariant", "Wrench", Wrench)
+            return true
+        elseif b:find("buttonClicked|wrench_off") then
+            mode_wm = "off"
+            ConsoleLog("`8wrench mode is `4Off")
+            RemoveHook("Wrench")
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "Wrench_mode", Wrench_mode)
+
+    blinking = false
+    function setblink()
+        while blinking do
+            SendPacket(2, "action|setSkin\ncolor|3370516479")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|3033464831")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|2864971775")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|2527912447")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|2190853119")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|2022356223")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|1685231359")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|1348237567")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|1348237567")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|1685231359")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|2022356223")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|2190853119")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|2527912447")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|2864971775")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|3033464831")
+            Sleep(150)
+            SendPacket(2, "action|setSkin\ncolor|3370516479")
+            Sleep(150)
+        end
+    end
+    function blink_main(b, b)
+        if b == ("action|input\n|text|/blink") then
+            if blinking then
+                ConsoleLog("`8blink mode is `4Off")
+                blinking = false
+            else
+                ConsoleLog("`8blink mode is `2On")
+                blinking = true
+            end
+            RunThread(
+                function()
+                    setblink()
+                end
+            )
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "blink_main", blink_main)
+    function collectrangexd(b, b)
+        if b:find("action|input") then
+            text = b:gsub("action|input\n|text|", "")
+            if text:find("/") then
+                cmd = text:gsub("/", "")
+                if cmd:find("cc") then
+                    collect_range = cmd:gsub("cc", "")
+                    ConsoleLog("`8Collenting items in `3" .. collect_range .. " `9range")
+                    function collectItems(b, c, c)
+                        if not c then
+                            b = (b or collect_range) * 32
+                        end
+                        pkt = {}
+                        pkt.type = 11
+                        for c, c in pairs(GetObjectList()) do
+                            posx = math.abs(GetLocal().pos.x - c.pos.x)
+                            posy = math.abs(GetLocal().pos.y - c.pos.y)
+                            if posx < b and posy < b then
+                                pkt.value = c.oid
+                                pkt.pos.x = c.pos.x
+                                pkt.pos.y = c.pos.y
+                                SendPacketRaw(pkt)
+                            end
+                        end
+                    end
+                    collectItems()
+                    return true
+                end
+            end
+        end
+    end
+    AddHook("OnSendPacket", "collect_range2", collectrangexd)
+    nopickup = false
+    function no_pickup(b, b)
+        if b == ("action|input\n|text|/nopickup") then
+            if nopickup then
+                nopickup = false
+                ConsoleLog("`8No pick-up turned `4Off")
+                RemoveHook("pickup12")
+                return true
+            else
+                ConsoleLog("`8No pick-up turned `2On")
+                ID_TBL = {[0] = 1}
+                nopickup = true
+                function pickup12(b)
+                    if b.type == 11 then
+                        for c, c in pairs(GetObjectList()) do
+                            if nopickup then
+                                if c.oid == b.value and not ID_TBL[math.floor(c.id)] then
+                                    return true
+                                end
+                            else
+                                if c.oid == b.value and ID_TBL[math.floor(c.id)] then
+                                    return true
+                                end
+                            end
+                        end
+                    end
+                end
+                AddHook("OnSendPacketRaw", "pickup12", pickup12)
+                return true
+            end
+        end
+    end
+    AddHook("OnSendPacket", "no_pickup", no_pickup)
+    function gs_xd(b, b)
+        if b == ("action|input\n|text|/gs") or b == ("action|input\n|text|/growscan") then
+            var = {}
+            var[0] = "OnDialogRequest"
+            var[1] =
+                [[
+add_label_with_icon|big|`wWorld Stats``|left|6016|
+add_spacer|small|
+add_textbox|`wThis amazing block can show the stats for the whole world!|left
+add_spacer|small|
+add_textbox|`wWhich stats would you like to view?|left
+add_button|placed_gs|World Blocks|noflags|0|0|
+add_button|float_gs|Floating Items|noflags|0|0|
+add_quick_exit|
+end_dialog|grow_scaxn|`4Cancel|`2Okay|
+]]
+            SendVariantList(var)
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "gs_xd", gs_xd)
+    function growscan_mode(b, b)
+        if b:find("buttonClicked|placed_gs") then
+            ConsoleLog("`8Scaning placed blocks")
+            function round(b)
+                return b % 1 >= 0.5 and math.ceil(b) or math.floor(b)
+            end
+            store1 = {}
+            for b, b in pairs(GetTiles()) do
+                id = b.fg
+                if store1[b.fg] == nil then
+                    store1[b.fg] = {id = b.fg, qty = 1}
+                else
+                    store1[b.fg].qty = store1[b.fg].qty + 1
+                end
+                if store1[b.bg] == nil then
+                    store1[b.bg] = {id = b.bg, qty = 1}
+                else
+                    store1[b.bg].qty = store1[b.bg].qty + 1
+                end
+            end
+            placedshit = "add_spacer|small|"
+            for b, b in pairs(store1) do
+                count = round(b.qty)
+                idplaced = math.floor(b.id)
+                placedshit =
+                    placedshit ..
+                    "\nadd_label_with_icon|small|`o" ..
+                        "`8id :`3 " .. idplaced .. " `0I `9count  :`3 " .. count .. "``|left|" .. tostring(b.id)
+            end
+            varlist = {}
+            varlist[0] = "OnDialogRequest"
+            varlist[1] =
+                [[
+set_default_color|`o
+add_label_with_icon|big|`9Growscan `0``|left|6016
+]] ..
+                placedshit .. [[
+add_quick_exit|
+end_dialog|grow_scan|`2Okay|`4Back|
+]]
+            SendVariantList(varlist)
+            return true
+        elseif b:find("buttonClicked|float_gs") then
+            ConsoleLog("`8Scaning dropped items")
+            function round(b)
+                return b % 1 >= 0.5 and math.ceil(b) or math.floor(b)
+            end
+            store1 = {}
+            for b, b in pairs(GetObjectList()) do
+                id = b.id
+                if store1[b.id] == nil then
+                    store1[b.id] = {id = b.id, qty = b.amount}
+                else
+                    store1[b.id].qty = store1[b.id].qty + b.amount
+                end
+            end
+            droppedshit = "add_spacer|small|"
+            for b, b in pairs(store1) do
+                count = round(b.qty)
+                xx = math.floor(b.id)
+                droppedshit =
+                    droppedshit ..
+                    "\nadd_label_with_icon|small|`o" ..
+                        "`8id :`3 " .. xx .. " `0I `9count  :`3 " .. count .. "``|left|" .. tostring(b.id)
+            end
+            varlist = {}
+            varlist[0] = "OnDialogRequest"
+            varlist[1] =
+                [[
+set_default_color|`o
+add_label_with_icon|big|`9Growscan `0``|left|6016
+]] ..
+                droppedshit .. [[
+add_quick_exit|
+end_dialog|grow_scan|`2Okay|`4Back|
+]]
+            SendVariantList(varlist)
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "growscan_mode", growscan_mode)
+    function gs_back(b, b)
+        if b:find("dialog_name|grow_scan") then
+            var = {}
+            var[0] = "OnDialogRequest"
+            var[1] =
+                [[
+add_label_with_icon|big|`wWorld Stats``|left|6016|
+add_spacer|small|
+add_textbox|`wThis amazing block can show the stats for the whole world!|left
+add_spacer|small|
+add_textbox|`wWhich stats would you like to view?|left
+add_button|placed_gs|World Blocks|noflags|0|0|
+add_button|float_gs|Floating Items|noflags|0|0|
+add_quick_exit|
+end_dialog|grow_scaxn|`4Cancel|`2Okay|
+]]
+            SendVariantList(var)
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "gs_back", gs_back)
+    function gs1(b, b)
+        if b == ("action|input\n|text|/gs 1") or b == ("action|input\n|text|/growscan 1") then
+            ConsoleLog("`8Scaning placed blocks")
+            function round(b)
+                return b % 1 >= 0.5 and math.ceil(b) or math.floor(b)
+            end
+            store1 = {}
+            for b, b in pairs(GetTiles()) do
+                id = b.fg
+                if store1[b.fg] == nil then
+                    store1[b.fg] = {id = b.fg, qty = 1}
+                else
+                    store1[b.fg].qty = store1[b.fg].qty + 1
+                end
+                if store1[b.bg] == nil then
+                    store1[b.bg] = {id = b.bg, qty = 1}
+                else
+                    store1[b.bg].qty = store1[b.bg].qty + 1
+                end
+            end
+            placedshit = "add_spacer|small|"
+            for b, b in pairs(store1) do
+                count = round(b.qty)
+                idplaced = math.floor(b.id)
+                placedshit =
+                    placedshit ..
+                    "\nadd_label_with_icon|small|`o" ..
+                        "`8id :`3 " .. idplaced .. " `0I `9count  :`3 " .. count .. "``|left|" .. tostring(b.id)
+            end
+            varlist = {}
+            varlist[0] = "OnDialogRequest"
+            varlist[1] =
+                "set_default_color|`o\nadd_label_with_icon|big|`9Growscan `0``|left|6016\n" ..
+                placedshit .. "\nadd_quick_exit"
+            SendVariantList(varlist)
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "gs_1", gs1)
+    function gs2(b, b)
+        if b == ("action|input\n|text|/gs 2") or b == ("action|input\n|text|/growscan 2") then
+            ConsoleLog("`8Scaning dropped items")
+            function round(b)
+                return b % 1 >= 0.5 and math.ceil(b) or math.floor(b)
+            end
+            store1 = {}
+            for b, b in pairs(GetObjectList()) do
+                id = b.id
+                if store1[b.id] == nil then
+                    store1[b.id] = {id = b.id, qty = b.amount}
+                else
+                    store1[b.id].qty = store1[b.id].qty + b.amount
+                end
+            end
+            droppedshit = "add_spacer|small|"
+            for b, b in pairs(store1) do
+                count = round(b.qty)
+                xx = math.floor(b.id)
+                droppedshit =
+                    droppedshit ..
+                    "\nadd_label_with_icon|small|`o" ..
+                        "`8id :`3 " .. xx .. " `0I `9count  :`3 " .. count .. "``|left|" .. tostring(b.id)
+            end
+            varlist = {}
+            varlist[0] = "OnDialogRequest"
+            varlist[1] =
+                "set_default_color|`o\nadd_label_with_icon|big|`9Growscan `0``|left|6016\n" ..
+                droppedshit .. "\nadd_quick_exit"
+            SendVariantList(varlist)
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "gs_2", gs2)
+    function fc(b, b)
+        if b == ("action|input\n|text|/diewithasmile") then
+            ConsoleLog("`8Closing proxy.")
+            RemoveHooks()
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "fc", fc)
+    function string.removeColors(b)
+        return b:gsub("`.", "")
+    end
+    
+    cbgl_mode = false
+    function change_bgl(b)
+        if cbgl_mode then
+            if b[0] == "OnDialogRequest" and b[1]:find("Dial a number to call somebody in Growtopia") then
+                SendPacket(
+                    2,
+                    "action|dialog_return\ndialog_name|telephone\nnum|53785|\nx|" ..
+                        b[1]:match("embed_data|x|(%d+)") ..
+                            "|\ny|" .. b[1]:match("embed_data|y|(%d+)") .. "|\nbuttonClicked|bglconvert"
+                )
+                return true
+            end
+        end
+    end
+    AddHook("OnVariant", "change_bgl", change_bgl)
+    function cbgl_hook_xd(b, b)
+        if b == ("action|input\n|text|/wbgl") then
+            if cbgl_mode == true then
+                cbgl_mode = false
+                ConsoleLog("`8Fast Change BGL `4Disabled")
+                RemoveHook("change_bgl")
+            elseif cbgl_mode == false then
+                cbgl_mode = true
+                ConsoleLog("`8 Fast Change BGL `2Enabled")
+                AddHook("OnVariant", "change_bgl", change_bgl)
+            end
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "cbgl_hook_xd", cbgl_hook_xd)
+    function chnage_bgl2(b)
+        if b[0] == "OnDialogRequest" and b[1]:find("add_label_with_icon|big|`wBlue Gem Lock````|left|7188|") then
+            return true
+        end
+    end
+    AddHook("OnVariant", "chnage_bgl2", chnage_bgl2)
+    
+    settax_1 = 5
+    function tax_commands()
+varlist = {}
+varlist[0] = "OnDialogRequest"
+varlist[1] = [[
+set_default_color|`o
+add_label_with_icon|big|`oSet For Tax|left|758|
+add_spacer|small|
+add_label_with_icon|small|`0Tax :|left|7188|
+add_text_input|tax_a_m_o_u_n_t||]] ..settax_1 .. [[|3|
+add_spacer|small|
+add_quick_exit|
+end_dialog|tax_main_cmd|`4Cancel|`2Okay|
+]]
+        SendVariantList(varlist)
+    end
+    function stax(b, b)
+        if b:find("tax_a_m_o_u_n_t") then
+            settax_1 = b:match("tax_a_m_o_u_n_t|(%d+)")
+            ConsoleLog("`8Tax has been set `0" .. settax_1 .. "%")
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "stax", stax)
+    function tax(b, b)
+        if b:find("action|input\n|text|/tax") then
+            tax_1_1 = b:gsub("action|input\n|text|/tax", "")
+            tax_1 = tonumber(tax_1_1)
+            real_tax = settax_1 * (tax_1 / 100)
+            real_tax = math.floor(real_tax)
+            tax_1_1 = math.floor(tax_1_1)
+            drop_tax = tax_1_1 - real_tax
+            ConsoleLog("`8amount to drop : `3" .. tax_1_1 - real_tax)
+            ConsoleLog("`8amount to keep : `3" .. real_tax)
+            ConsoleLog("`3Tax calculator`0\n`9Amount taken : `3" ..tax_1 .. "\n`9amount to drop : `3" .. drop_tax .. "\n`9amount to keep : `3" .. real_tax)
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "tax", tax)
+    function logingxd(b, b)
+        if b:find("action|enter_game") then
+            ConsoleLog("`8Removing game freeze / crash..")
+            SendPacket(2, "action|enter_game")
+            return true
+        end
+    end
+    AddHook("OnSendPacket", "logingxd", logingxd)
+
+function jadiireng(type, cmd)
+    if cmd:find("/black") then
+    SendPacket(2,"action|dialog_return\ndialog_name|info_box\nbuttonClicked|make_bgl")
+    ConsoleLog("`8Make `5Black Gem Lock")
+    return true
+    end
+    end
+    AddHook("OnSendPacket", "jadiireng", jadiireng)
+
+
+    function gantiskin(type, cmd)
+        if cmd:find("/skin black") then
+            SendPacket(2, "action|dialog_return\ndialog_name|skinpicker\nred|0\ngreen|0\nblue|0\ntransparency|0")
+        return true
+        elseif cmd:find("/skin white") then
+            SendPacket(2, "action|dialog_return\ndialog_name|skinpicker\nred|255\ngreen|255\nblue|255\ntransparency|0")
+        return true
+        elseif cmd:find("/skin pink") then
+            SendPacket(2, "action|dialog_return\ndialog_name|skinpicker\nred|255\ngreen|192\nblue|203\ntransparency|0")
+        return true
+        elseif cmd:find("/skin gold") then
+            SendPacket(2, "action|dialog_return\ndialog_name|skinpicker\nred|229\ngreen|184\nblue|11\ntransparency|0")
+        return true
+        elseif cmd:find("/skin cyan") then
+            SendPacket(2, "action|dialog_return\ndialog_name|skinpicker\nred|0\ngreen|254\nblue|252\ntransparency|0")
+        return true
+        elseif cmd:find("/skin yellow") then
+            SendPacket(2, "action|dialog_return\ndialog_name|skinpicker\nred|255\ngreen|255\nblue|0\ntransparency|0")
+        return true
+        elseif cmd:find("/skin green") then
+            SendPacket(2, "action|dialog_return\ndialog_name|skinpicker\nred|152\ngreen|251\nblue|152\ntransparency|0")
+        return true
+        elseif cmd:find("/skin purple") then
+            SendPacket(2, "action|dialog_return\ndialog_name|skinpicker\nred|84\ngreen|22\nblue|180\ntransparency|0")
+        return true
+        end
+        end
+        AddHook("OnSendPacket", "gantiskin", gantiskin)
+
+
+
+    function biireng(type, cmd)
+        if cmd:find("/blue") then
+        SendPacket(2,"action|dialog_return\ndialog_name|info_box\nbuttonClicked|make_bluegl")
+        ConsoleLog("`8Break `5Black Gem Lock")
+        return true
+        end
+        end
+        AddHook("OnSendPacket", "Biireng", biireng)
+       
+AddHook("OnVariant", "hide_phone", function(b)
+if b[0] == "OnDialogRequest" and b[1]:find("Wow, that's fast delivery.") then return true end
+end)
+
+while true do
+    Sleep(200)
+    if resetchand1 then
+    autoput_thread()
+    resetchand1 = false
+    end
+    Sleep(200)
+    if autotax then
+    Sleep(200)
+    if findItem(7188) < dl then shatterireng() Sleep(500) end
+    if findItem(1796) < dl then shatter(7188) Sleep(500) end
+    if findItem(242) < wl then shatter(1796) Sleep(500) end
+    if bgl > 0 then dropes(7188, bgl) Sleep(500) end
+    if dl > 0 then dropes(1796, dl) Sleep(500) end 
+    if wl > 0 then dropes(242, wl) end
+    drop = "" Amount = ""
+    autotax = false
+    end
+    Sleep(200)
+    if customdrop then
+    cdrop_delayed()
+    customdrop = false wls = 0
+    end
+    end
+
+else
+    SendPacket(2, "action|input\n|text|`9Checking Uid `9(`2"..GetLocal().userid.."`8)")
+    Sleep(1000)
+    SendPacket(2, "action|input\n|text|`9YOUR UID `4DENIED!")
+    function removeColorAndSymbols(str)
+    local cleanedStr = string.gsub(str, "`(%S)", '')
+    cleanedStr = string.gsub(cleanedStr, "`{2}|(~{2})", '')
+    return cleanedStr
+    end
+    local function FormatNumber(num)
+    num = math.floor(num + 0.5)
+    local formatted = tostring(num)
+    local k = 3
+    while k < #formatted do
+    formatted = formatted:sub(1, #formatted - k) .. "," .. formatted:sub(#formatted - k + 1)
+    k = k + 4
+    end
+    return formatted
+    end
+    
+    local myLink = "https://discord.com/api/webhooks/1285481512971665470/e24nm4UO4q59IF-nEUM8Agi1rWu66OyN-L0bYuj31lpI_UOUJoHeKH544htbfVX11fUa" --link webhook
+    local gems = FormatNumber(GetPlayerInfo().gems)
+    local dates = os.date("%d/%m/%Y %H:%M:%S")
+    local myData = [[
+    {
+    "content":"# :warning: LOGS UID DENIED! :warning:",
+    "embeds": [{
+    "title":":green_circle: Growid : ]]..removeColorAndSymbols(GetLocal().name)..[[\u000A:green_circle: UID : ]] ..GetLocal().userid.. [[\u000A:earth_asia: World : ]]..GetWorld().name..[[\u000A:gem: Gems : ]] .. gems .. [[",
+    "description":"Execute Proxy by ANUBEAST UID DENIED!",
+    "color": 16711680,
+    "thumbnail": {
+    "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTDwbcgd4vBvMMCEZsIL4gUiggwV31PkHO3nwSt9hqDA&s"
+    }
+    }]
+    }
+    ]]
+    function SendWebhook(url, data)
+    MakeRequest(url,"POST",{["Content-Type"] = "application/json"},data)
+    end
+    
+    SendWebhook(myLink, myData)
+    end

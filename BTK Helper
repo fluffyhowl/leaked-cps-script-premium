@@ -1,0 +1,633 @@
+-- Do not change
+local ChangePos1 = false
+local ChangePos2 = false
+local GameStarted = false
+local Player1IsOnTheRight = false
+local Player2IsOnTheRight = false
+local CurrentPunchIndexP1 = 1
+local CurrentPunchIndexP2 = 1
+local CurrentBet = 0
+local CurrentTax = 5
+local FastPull = false
+local FastBan = false
+local ConvertDl = false
+local BlockDialog = false
+local OldPositionX = math.floor(GetLocal().pos_x / 32)
+local OldPositionY = math.floor(GetLocal().pos_y / 32)
+
+local Player1Positions = {
+    {x = 0, y = 0}, -- dbox
+    {x = 0, y = 0}, -- chand 1
+    {x = 0, y = 0}, -- chand 2
+    {x = 0, y = 0} -- chand 3
+}
+-- dont be noob just do Player1Positions[1].x or Player1Positions[1].y and this wil be dbox x or y
+
+local Player2Positions = {
+    {x = 0, y = 0},
+    {x = 0, y = 0},
+    {x = 0, y = 0},
+    {x = 0, y = 0}
+}
+
+-- Useful Functions
+local function cLog(text)
+    local log = {}
+    log[0] = "OnConsoleMessage"
+    log[1] = "`b(`^BTK`b) " .. text
+    log.netid = -1
+    SendVarlist(log)
+end
+
+local function Warn(text)
+	local packet = {
+			[0] = "OnAddNotification",
+			[1] = "interface/atomic_button.rttex",
+			[2] = text,
+			[3] = 'audio/hub_open.wav',
+			[4] = 0,
+			netid = -1
+	}
+	SendVarlist(packet)
+end
+
+local function DOUBLE_CLICK_ITEM(ITEM_ID) -- Send a double click item packet, mostly used for converting World Locks to Diamond Locks
+    local packet = {
+        type = 10,
+        int_data = ITEM_ID
+    }
+    SendPacketRaw(packet)
+end
+
+local function split(inputstr, sep) -- Credits to Asleepdream
+    local t = {}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+        table.insert(t, str)
+    end
+    return t
+end
+
+local function RAW_MOVE(x, y)
+    local pkt = {}
+    pkt.type = 0
+    pkt.pos_x = x * 32
+    pkt.pos_y = y * 32
+    pkt.int_x = -1
+    pkt.int_y = -1
+    SendPacketRaw(pkt)
+    Sleep(90)
+end
+
+local function CreateDialog(text)
+    local textPacket = {
+        [0] = "OnDialogRequest",
+        [1] = text,
+        netid = -1
+    }
+    SendVarlist(textPacket)
+end
+
+local function Place(x, y, id)
+    local player = GetLocal()
+    local pkt_punch = {
+        type = 3,
+        int_data = id,
+        pos_x = player.pos_x,
+        pos_y = player.pos_y,
+        int_x = x,
+        int_y = y,
+    }
+    SendPacketRaw(pkt_punch)
+end
+
+local function GET_BALANCE()
+    local BGL = GetItemCount(7188)
+    local BLGL = GetItemCount(11550) * 100
+    local DL = GetItemCount(1796) * 0.01
+
+    local netWorth = math.floor(BGL + BLGL + DL)
+    return netWorth
+end
+
+local function MainMenu()
+    local dialog = [[
+add_label_with_icon|big|`bBTK Helper|left|11550|
+add_spacer|small|
+add_image_button|banner|interface/large/az_8x1_adv2.rttex|bannerlayout|OPENSURVEY|||||||||||
+add_spacer|small|
+add_textbox|`9GrowID: ]] .. GetLocal().name ..[[|
+add_textbox|`9Time: ]] .. os.date("%I:%M %p") .. [[|
+add_textbox|`9Modal: ]] .. GET_BALANCE() .. [[ BGL|
+add_spacer|small|
+add_spacer|small|
+add_label_with_icon|small|`9Main Commands:|left|1790
+add_textbox|`9/btk `1- Main Menu|
+add_textbox|`9/start `1- Starts the game|
+add_textbox|`9/cwin `1- Checks and Drops the amount to the winner|
+add_textbox|`9/cg `1- Checks and shows winner without dropping amount|
+add_textbox|`9/checkgems `1- Checks and shows winner without dropping amount|
+add_textbox|`9/tax (amount) `1- Sets the Tax Amount|
+add_textbox|`9/setpos1 `1- Sets the Donation box and Chandelier for Player 1|
+add_textbox|`9/setpos2 `1- Sets the Donation box and Chandelier for Player 2|
+add_spacer|small|
+add_label_with_icon|small|`9Lock Commands:|left|242
+add_textbox|`9/depo (amount) `1- Deposits the amount of Blue Gem Locks|
+add_textbox|`9/with (amount) `1- Withdraws the amount of Blue Gem Locks|
+add_textbox|`9/dd (amount) `1- Drop Diamond Locks|
+add_textbox|`9/db (amount) `1- Drop `eBlue Gem Locks|
+add_textbox|`9/dbl (amount) `1- Drop `bBlack Gem Locks|
+add_spacer|small|
+add_label_with_icon|small|`9Other Commmands:|left|8712
+add_textbox|`9/fpull `1- Enables/Disables Fast Pull|
+add_textbox|`9/fban `1- Enables/Disables Fast Ban|
+add_textbox|`9/cdl `1- Enables/Disables Fast Convert Diamond Lock to Blue Gem Locks|
+add_textbox|`9/cbgl `1- Enables/Disables Fast Convert Blue Gem Locks to Diamond Lock|
+add_textbox|`9/cblgl `1- Enables/Disables Fast Convert Blue Gem Lock to Black gem Lock|
+add_spacer|small|
+add_url_button||`1Discord Community|noflags|https://discord.gg/busWsqEZdJ|Join The Discord!|0|0|\
+add_spacer|small|
+end_dialog|hsj|Close|
+add_quick_exit||
+]]
+    CreateDialog(dialog)
+end
+
+-- btk Functions
+local function CountGemsForPlayer(playerPositions, playerName)
+    local totalGems = 0
+
+    for i = 2, #playerPositions do
+        local chandelierX = playerPositions[i].x
+        local chandelierY = playerPositions[i].y
+        local chandelierGemCount = 0
+
+        for _, item in pairs(GetObjects()) do
+            if item.id == 112 then
+                local gemX = math.floor(item.pos_x / 32)
+                local gemY = math.floor(item.pos_y / 32)
+
+                if gemX == chandelierX and gemY == chandelierY then
+                    chandelierGemCount = chandelierGemCount + math.floor(item.count)
+                end
+            end
+        end
+
+        totalGems = totalGems + chandelierGemCount
+    end
+
+    return totalGems
+end
+
+local function PickupGems(playerPositions, playerName)
+    for i = 2, #playerPositions do
+        local chandelierX = playerPositions[i].x
+        local chandelierY = playerPositions[i].y
+        FindPath(chandelierX, chandelierY)
+        Sleep(250)
+    end
+end
+
+local function SetupGame(playerPositions, playerName)
+    local oldX = math.floor(GetLocal().pos_x / 32)
+    local oldY = math.floor(GetLocal().pos_y / 32)
+
+    for i = 2, #playerPositions do
+        local chandelierX = playerPositions[i].x
+        local chandelierY = playerPositions[i].y
+        FindPath(chandelierX, chandelierY)
+        Sleep(250)
+        if GetItemCount(5640) == 1 then
+            Place(chandelierX, chandelierY, 5640)
+        elseif GetItemCount(340) >= 6 then
+            Place(chandelierX, chandelierY, 340)
+        end
+        Sleep(250)
+    end
+
+    FindPath(playerPositions[1].x, playerPositions[1].y)
+    Sleep(250)
+    FindPath(oldX, oldY)
+    if tonumber(GetItemCount(7188)) >= 100 then
+        SendPacket(2, "action|dialog_return\ndialog_name|info_box\nbuttonClicked|make_bgl")
+    end
+end
+
+local function CountBets(playerPositions, playerName)
+    local totalBet = 0
+
+    local displayBoxX = playerPositions[1].x
+    local displayBoxY = playerPositions[1].y
+
+    for _, item in pairs(GetObjects()) do
+        local itemX = math.floor(item.pos_x / 32)
+        local itemY = math.floor(item.pos_y / 32)
+
+        if itemX == displayBoxX and itemY == displayBoxY then
+            if item.id == 242 then
+                totalBet = totalBet + item.count / 100
+            elseif item.id == 1796 then
+                totalBet = totalBet + item.count
+            elseif item.id == 7188 then
+                totalBet = totalBet + item.count*100
+            elseif item.id == 11550 then
+                totalBet = totalBet + item.count*10000
+            end
+        end
+    end
+
+    return totalBet
+end
+
+local function StartGame()
+    RunThread(function()
+        GameStarted = true
+
+        if GameStarted then
+            local player1Bet = CountBets(Player1Positions, "Player 1")
+            local player2Bet = CountBets(Player2Positions, "Player 2")
+            CurrentBet = player1Bet + player2Bet
+
+            if CurrentBet == 0 then
+                Warn("action|input\n|text|`4Both players must drop their bets.")
+            elseif player1Bet == player2Bet then
+                SendPacket(2, "action|input\n|text|`9Game `2Started `9Bet amount is: `1".. CurrentBet .." Diamond Locks `2[TAX: " .. CurrentTax .. "%]")
+                SetupGame(Player1Positions, "Player 1")
+                SetupGame(Player2Positions, "Player 2")
+            else
+                Warn("`4The bets are not the same. Player 1's Bet: " .. player1Bet .. " Player 2's Bet: " .. player2Bet)
+            end
+        end
+    end)
+end
+
+local function CalculateDrops(CurrentBet)
+    local BLUE_GEM_LOCK_VALUE = 100
+    local BLACK_GEM_LOCK_VALUE = 10000
+
+    local taxAmount = math.floor(CurrentBet * CurrentTax / 100)
+    local adjustedBet = CurrentBet - taxAmount
+
+    if adjustedBet >= BLACK_GEM_LOCK_VALUE then
+        BLACK_GEM_LOCKS = math.floor(adjustedBet / BLACK_GEM_LOCK_VALUE)
+        local REMINDER = adjustedBet % BLACK_GEM_LOCK_VALUE
+
+        if BLACK_GEM_LOCKS > 0 then
+            Sleep(250)
+            SendPacket(2, "action|dialog_return\ndialog_name|drop\nitem_drop|11550|\nitem_count|" .. BLACK_GEM_LOCKS)
+        end
+        
+        if REMINDER > 0 then
+            local BLUE_GEM_LOCKS = math.floor(REMINDER / BLUE_GEM_LOCK_VALUE)
+            local DIAMOND_LOCKS = REMINDER & BLUE_GEM_LOCK_VALUE
+
+            if BLUE_GEM_LOCKS > 0 then
+                Sleep(250)
+                SendPacket(2, "action|dialog_return\ndialog_name|info_box\nbuttonClicked|make_bluegl")
+				Sleep(250)
+                SendPacket(2, "action|dialog_return\ndialog_name|drop\nitem_drop|7188|\nitem_count|" .. BLUE_GEM_LOCKS)
+            end
+        end
+
+    elseif adjustedBet <= 10000 and adjustedBet > BLUE_GEM_LOCK_VALUE then
+        local BLUE_GEM_LOCKS = math.floor(adjustedBet / BLUE_GEM_LOCK_VALUE)
+        local REMAINDER = adjustedBet % BLUE_GEM_LOCK_VALUE
+        SendPacket(2, "action|dialog_return\ndialog_name|info_box\nbuttonClicked|make_bluegl")
+
+        if BLUE_GEM_LOCKS > 0 then
+            SendPacket(2,"action|dialog_return\ndialog_name|info_box\nbuttonClicked|make_bluegl")
+            Sleep(250)
+            SendPacket(2, "action|dialog_return\ndialog_name|drop\nitem_drop|7188|\nitem_count|" .. BLUE_GEM_LOCKS)
+        end
+
+        if REMAINDER > 0 then
+            DOUBLE_CLICK_ITEM(7188)
+            Sleep(250)
+            SendPacket(2, "action|dialog_return\ndialog_name|drop\nitem_drop|1796|\nitem_count|" .. REMAINDER)
+        end
+    elseif adjustedBet <= 100 then
+        Sleep(150)
+        SendPacket(2, "action|dialog_return\ndialog_name|drop\nitem_drop|1796|\nitem_count|" .. adjustedBet)
+    else
+        local BLUE_GEM_LOCKS = math.floor(adjustedBet / BLUE_GEM_LOCK_VALUE)
+        local DIAMOND_LOCKS = math.floor(adjustedBet % BLUE_GEM_LOCK_VALUE)
+        Sleep(150)
+        SendPacket(2, "action|dialog_return\ndialog_name|drop\nitem_drop|7188|\nitem_count|" .. BLUE_GEM_LOCKS)
+        if DIAMOND_LOCKS > 0 then
+            DOUBLE_CLICK_ITEM(7188)
+            Sleep(150)
+            SendPacket(2, "action|dialog_return\ndialog_name|drop\nitem_drop|1796|\nitem_count|" .. DIAMOND_LOCKS)
+        end
+    end
+end
+
+local function ResetGame()
+    RunThread(function()
+        SetupGame(Player1Positions, "Player 1")
+        SetupGame(Player2Positions, "Player 2")
+    end)
+end
+
+local function CheckWinner()
+    RunThread(function()
+        GameStarted = false
+        local totalGemsP1 = CountGemsForPlayer(Player1Positions, "Player 1")
+        local totalGemsP2 = CountGemsForPlayer(Player2Positions, "Player 2")
+
+        if totalGemsP1 > totalGemsP2 then
+            
+            SendPacket(2, "action|input\n|text|`9Player 1: `2"..totalGemsP1.." (gems) `9, Player 2: `4"..totalGemsP2.." `9, Player 1 `2Wins!")
+            FindPath(Player1Positions[1].x, Player1Positions[1].y)
+            if Player1IsOnTheRight then
+                GetLocal().facing_left = false
+            else
+                GetLocal().facing_left = true
+            end
+            Sleep(250)
+            CalculateDrops(CurrentBet)
+        elseif totalGemsP1 < totalGemsP2 then
+            SendPacket(2, "action|input\n|text|`9Player 1: `4"..totalGemsP1.." (gems) `9, Player 2: `2"..totalGemsP2.." `9, Player 2 `2Wins!")
+            FindPath(Player2Positions[1].x, Player2Positions[1].y)
+            if Player2IsOnTheRight then
+                GetLocal().facing_left = false
+            else
+                GetLocal().facing_left = true
+            end
+            Sleep(250)
+            CalculateDrops(CurrentBet)
+        else
+            SendPacket(2, "action|input\n|text|`9Player 1: `2"..totalGemsP1.." (gems) `9, Player 2: `4"..totalGemsP2.." `9, Players `8Tied!")
+            ResetGame()
+        end
+        PickupGems(Player1Positions, "Player 1")
+        PickupGems(Player2Positions, "Player 2")
+
+        Sleep(750)
+        FindPath(OldPositionX, OldPositionY)
+    end)
+end
+
+local function CheckGems()
+    RunThread(function()
+        GameStarted = false
+        local totalGemsP1 = CountGemsForPlayer(Player1Positions, "Player 1")
+
+        local totalGemsP2 = CountGemsForPlayer(Player2Positions, "Player 2")
+
+        if totalGemsP1 > totalGemsP2 then
+            SendPacket(2, "action|input\n|text|`9Player 1: `2"..totalGemsP1.." (gems) `9, Player 2: `4"..totalGemsP2.." `9, Player 1 `2Wins!")
+        elseif totalGemsP1 < totalGemsP2 then
+            SendPacket(2, "action|input\n|text|`9Player 1: `4"..totalGemsP1.." (gems) `9, Player 2: `2"..totalGemsP2.." `9, Player 2 `2Wins!")
+        else
+            SendPacket(2, "action|input\n|text|`9Player 1: `2"..totalGemsP1.." (gems) `9, Player 2: `4"..totalGemsP2.." `9, Players `8Tied!")
+        end
+    end)
+end
+
+MainMenu()
+
+-- Callback functions
+local function CommandHandler(type, pkt)
+    if type == 2 and pkt:find("action|input\n|text|/") then
+        local pkt = pkt:gsub("action|input\n|text|", "")
+        local textBreak = split(pkt, " ")
+        local cmd = string.lower(textBreak[1])
+        local param = textBreak[2]
+        
+        if cmd == "/setpos1" then
+            ChangePos1 = true
+            ChangePos2 = false
+            CurrentPunchIndexP1 = 1
+            cLog("`9You are now setting positions for Player 1.")
+            return true
+
+        elseif cmd == "/setpos2" then
+            ChangePos2 = true
+            ChangePos1 = false
+            CurrentPunchIndexP2 = 1
+            cLog("`9You are now setting positions for Player 2.")
+            return true
+
+        elseif cmd == "/start" then
+            if GetItemCount(5640) == 1 or GetItemCount(340) >= 6 then
+                StartGame()
+                GameStarted = true
+            else
+                Warn("`4You do not have a Magplant Remote!")
+            end
+            return true
+
+        elseif cmd == "/btk" then
+            MainMenu()
+            GameStarted = true
+            return true
+        
+        elseif cmd == "/fpull" then
+            if not FastPull then
+                FastPull = true
+                cLog("`9Fast Pull is now `2Enabled")
+            else
+                FastPull = false
+                cLog("`9Fast Pull is now `4Disabled")
+            end
+            return true
+
+        elseif cmd == "/fban" then
+            if not FastBan then
+                FastBan = true
+                cLog("`9Fast Ban is now `2Enabled")
+            else
+                FastBan = false
+                cLog("`9Fast Ban is now `4Disabled")
+            end
+            return true
+
+        elseif cmd == "/cwin" then
+            OldPositionX = math.floor(GetLocal().pos_x / 32)
+            OldPositionY = math.floor(GetLocal().pos_y / 32)
+            CheckWinner()
+            return true
+
+        elseif cmd == "/checkgems" or cmd == "/cg" then
+            CheckGems()
+            return true
+
+        elseif cmd == "/spam" then
+            if tostring(param) then
+                RunThread(function()
+                    SendPacket(2, "action|input\n|text|/setspam " .. param)
+                    Sleep(150)
+                    SendPacket(2, "action|dialog_return\ndialog_name|cheats\ncheck_autospam|1")
+                    BlockDialog = true
+                end)
+            else
+                cLog("`4You must specify the Tax Amount")
+            end
+            return true
+
+        elseif cmd == "/cbgl" then
+            if GetItemCount(7188) >= 100 then
+                SendPacket(2, "action|dialog_return\ndialog_name|info_box\nbuttonClicked|make_bgl")
+                cLog("Successfully converted Blue Gem Lock(s) to Black Gem Lock")
+            else
+                cLog("`cYou do not have enough Blue Gem Locks to convert.")
+            end
+            return true
+
+        elseif cmd == "/cblgl" then
+            if GetItemCount(11550) >= 1 then
+                SendPacket(2, "action|dialog_return\ndialog_name|info_box\nbuttonClicked|make_bluegl")
+                cLog("Successfully converted Black Gem Lock(s) to Blue Gem Lock")
+            else
+                cLog("`cYou do not have enough Black Gem Locks to convert.")
+            end
+            return true
+
+        elseif cmd == "/cdl" then
+            if not ConvertDl then
+                ConvertDl = true
+                cLog("`2Enabled `cConvert BGL to DL")
+            else
+                ConvertDl = false
+                cLog("`4Disabled `cConvert BGL to DL")
+            end
+            return true
+
+        elseif cmd == "/depo" then
+            if tonumber(param) then
+                SendPacket(2,"action|dialog_return\ndialog_name|bank_deposit\nbgl_count|" .. param)
+            else
+                cLog("`4You must specify the Tax Amount")
+            end
+            return true
+
+        elseif cmd == "/with" then
+            if tonumber(param) then
+                SendPacket(2,"action|dialog_return\ndialog_name|bank_withdraw\nbgl_count|" .. param)
+            else
+                cLog("`4You must specify the Tax Amount")
+            end
+            return true
+
+        elseif cmd == "/dd" then
+            if tonumber(param) then
+                SendPacket(2, "action|dialog_return\ndialog_name|drop\nitem_drop|1796|\nitem_count|" .. param)
+            else
+                cLog("`4You must specify the Tax Amount")
+            end
+            return true
+
+        elseif cmd == "/db" then
+            if tonumber(param) then
+                SendPacket(2, "action|dialog_return\ndialog_name|drop\nitem_drop|7188|\nitem_count|" .. param)
+            else
+                cLog("`4You must specify the Tax Amount")
+            end
+            return true
+
+        elseif cmd == "/dbl" then
+            if tonumber(param) then
+                SendPacket(2, "action|dialog_return\ndialog_name|drop\nitem_drop|11550|\nitem_count|" .. param)
+            else
+                cLog("`4You must specify the Tax Amount")
+            end
+            return true
+
+        elseif cmd == "/tax" then
+            if tonumber(param) then
+                if tonumber(param) > 100 then
+                    cLog("`4Tax Amount cannot be higher than 100%")
+                elseif tonumber(param) <= 100 then
+                    CurrentTax = tonumber(param)
+                    cLog("`9Successfully set tax to `2" .. CurrentTax .. "%")
+                end
+            else
+                cLog("`4You must specify the Tax Amount")
+            end
+            return true
+        end
+    end
+
+    if pkt:find("action|wrench") then
+        NetID = pkt:match("action|wrench\n|netid|(%d+)")
+
+        if FastPull then
+            SendPacket(2,"action|dialog_return\ndialog_name|popup\nnetID|" .. NetID .. "|\nbuttonClicked|pull")
+            return true
+        elseif FastBan then
+            SendPacket(2,"action|dialog_return\ndialog_name|popup\nnetID|" .. NetID .. "|\nbuttonClicked|world_ban")
+            return true
+        end
+    end
+end
+
+
+local function PosHandler(packet)
+    if packet.type == 0 and (packet.flags == 2594 or packet.flags == 2610) then
+        local posX = math.floor(packet.int_x)
+        local posY = math.floor(packet.int_y)
+
+        local localX = math.floor(GetLocal().pos_x / 32)
+
+        if ChangePos1 then
+            if CurrentPunchIndexP1 <= #Player1Positions then
+                Player1Positions[CurrentPunchIndexP1].x = posX
+                Player1Positions[CurrentPunchIndexP1].y = posY
+
+                local objectNames = {"Display Box", "Chandelier 1", "Chandelier 2", "Chandelier 3"}
+                cLog("`9Player 1 updated " .. objectNames[CurrentPunchIndexP1] .. " to X: " .. posX .. ", Y: " .. posY)
+
+                if objectNames[CurrentPunchIndexP1] == "Display Box" then
+                    Player1IsOnTheRight = posX > localX
+                end
+
+                CurrentPunchIndexP1 = CurrentPunchIndexP1 + 1
+                if CurrentPunchIndexP1 > #Player1Positions then
+                    cLog("`9Player 1 positions fully updated.")
+                    ChangePos1 = false
+                end
+            end
+        elseif ChangePos2 then
+            if CurrentPunchIndexP2 <= #Player2Positions then
+                Player2Positions[CurrentPunchIndexP2].x = posX
+                Player2Positions[CurrentPunchIndexP2].y = posY
+
+                local objectNames = {"Display Box", "Chandelier 1", "Chandelier 2", "Chandelier 3"}
+                cLog("`9Player 2 updated " .. objectNames[CurrentPunchIndexP2] .. " to X: " .. posX .. ", Y: " .. posY)
+
+                if objectNames[CurrentPunchIndexP2] == "Display Box" then
+                    Player2IsOnTheRight = posX > localX
+                end
+
+                CurrentPunchIndexP2 = CurrentPunchIndexP2 + 1
+                if CurrentPunchIndexP2 > #Player2Positions then
+                    cLog("`9Player 2 positions fully updated.")
+                    ChangePos2 = false
+                end
+            end
+        end
+    end
+
+    if packet.type == 3 and packet.int_data == 32 and ConvertDl then
+        if math.floor(GetTile(packet.int_x, packet.int_y).fg) == 3898 then
+            SendPacket(2, "action|dialog_return\ndialog_name|telephone\nnum|53785|\nx|" .. packet.int_x .. "|\ny|" .. packet.int_y .. "|\nbuttonClicked|bglconvert")
+            return true
+        end
+    end
+end
+
+local function DialogHandler(varlist, packet)
+	if varlist[0]:find("OnDialogRequest") then
+        if varlist[1]:find("Wow, that's fast") and ConvertDl then
+            return true
+        end
+
+        if varlist[1]:find("Set Personal Description") and BlockDialog then
+            BlockDialog = false
+            return true
+        end
+	end
+end
+
+AddCallback("Dialog Blocker", "OnVarlist", DialogHandler)
+AddCallback("Command System", "OnPacket", CommandHandler)
+AddCallback("Punch Detector", "OnRawPacket", PosHandler)
